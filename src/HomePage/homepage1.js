@@ -97,8 +97,8 @@ getMenuNodes = (menuList) => {
                   <Sider className="site-layout-background" width={200}>
                     <Menu
                       mode="inline"
-                      selectedKeys={[path]}
-                      openKeys={[openKey]}
+                      // selectedKeys={[path]}
+                      // openKeys={[openKey]}
                       style={{ height: '100%' }}
                     >
                       {

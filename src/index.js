@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Homepage from './HomePage/homepage1';
-import App from './App/app';
-import Web from './Web/web';
+import App from './HomePage/App/app';
+import Web from './HomePage/Web/web';
+import Login from './Admin/Login/login'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 class Indexpage extends React.Component {
@@ -15,7 +16,8 @@ class Indexpage extends React.Component {
           <Route path="/homepage" component={Homepage}></Route>
           <Route path="/app" component={App}></Route>
           <Route path="/web" component={Web}></Route>
-          <Route path="/" component={Homepage}></Route>
+          <Route path="/login" component={Login}></Route>
+          <Route path="/" exact component={Homepage}></Route>
         </Router>
       </div>
     )
