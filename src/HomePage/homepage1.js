@@ -42,7 +42,6 @@ getMenuNodes = (menuList) => {
         </SubMenu>
       )
     }
-    return 
   })
 }
 
@@ -80,7 +79,6 @@ getMenuNodes = (menuList) => {
     render(){
       const { lastHeight } = this.state;
       const path = this.props.location.pathname
-      const openKey = this.openKey
       console.log("render()",path)
         return(
           <Layout>

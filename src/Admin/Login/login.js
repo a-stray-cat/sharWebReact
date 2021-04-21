@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import {reqLogin} from '../../api'
+import memoryUtils from '../../utils/memoryUtils'
+import storageUtils from '../../utils/storageUtils'
 
 import './login.css'
 import logo from './image/logo.png'
+import { Redirect } from 'react-router';
 
 export default class Login extends Component {
     state = {
@@ -34,15 +37,26 @@ export default class Login extends Component {
         });
     }
     render() {
+        //判断登录
+        const user = memoryUtils.user
+        const isEmpty = JSON.stringify(user)=='{}'
+        const isEmptyf = !isEmpty
+        if (isEmptyf){
+            return <Redirect to='/admin'></Redirect>
+        }
         const onFinish = (async (values) => {
             const {adminname,adminpassword} = values
             const response = await reqLogin(adminname,adminpassword)
-            const result = response.data
-            console.log(result)
-            if(result.state===1) {
+            const result = response.config
+            if(response.data.state===1) {
                 message.success('登陆成功')
+                
+                const user = result.data
+                memoryUtils.user = user //保存在内存中
+                storageUtils.saveUser(user) //保存在local中
+
                 this.props.history.replace('/admin')
-            } else if(result.state===2) {
+            } else if(response.data.state===2) {
                 message.error("密码错误！")
             } else {
                 message.error("用户不存在！")

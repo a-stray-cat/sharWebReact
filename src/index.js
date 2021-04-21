@@ -6,10 +6,15 @@ import Homepage from './HomePage/homepage1';
 import App from './HomePage/App/app';
 import Web from './HomePage/Web/web';
 import Login from './Admin/Login/login'
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import Admin from './Admin/admin'
+import storageUtils from './utils/storageUtils'
+import memoryUtils from './utils/memoryUtils'
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 class Indexpage extends React.Component {
   render(){
+    const user = storageUtils.getUser()
+    memoryUtils.user = user
     return(
       <div>
         <Router>
@@ -17,6 +22,7 @@ class Indexpage extends React.Component {
           <Route path="/app" component={App}></Route>
           <Route path="/web" component={Web}></Route>
           <Route path="/login" component={Login}></Route>
+          <Route path="/admin" component={Admin}></Route>
           <Route path="/" exact component={Homepage}></Route>
         </Router>
       </div>
