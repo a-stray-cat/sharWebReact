@@ -33,16 +33,16 @@ const menuList = [
         title: '手机端',
         key: '/app',
         icon: '',
-        children: [
-            {
-                title: 'test',
-                key: '/app/test',
-            },
-            {
-                title: 'example',
-                key: '/app/example',
-            }
-        ]
+        // children: [
+        //     {
+        //         title: 'test',
+        //         key: '/app/test',
+        //     },
+        //     {
+        //         title: 'example',
+        //         key: '/app/example',
+        //     }
+        // ]
     },
 
 ]
