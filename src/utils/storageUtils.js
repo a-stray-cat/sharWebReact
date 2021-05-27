@@ -1,4 +1,4 @@
-import { getSuggestedQuery } from "@testing-library/dom"
+// import { getSuggestedQuery } from "@testing-library/dom"
 import store from 'store'
 /*
 进行local数据存储管理的工具模块

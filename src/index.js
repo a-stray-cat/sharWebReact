@@ -7,7 +7,7 @@ import Login from './Admin/Login/login'
 import Admin from './Admin/admin'
 import storageUtils from './utils/storageUtils'
 import memoryUtils from './utils/memoryUtils'
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 class Indexpage extends React.Component {
   render(){
@@ -15,14 +15,14 @@ class Indexpage extends React.Component {
     memoryUtils.user = user
     return(
       <div>
-        <BrowserRouter>
+        <Router>
           <Switch>
             <Route path="/homepage" component={Homepage}></Route>
             <Route path="/login" component={Login}></Route>
             <Route path="/admin" component={Admin}></Route>
             <Route path="/" exact component={Homepage}></Route>
           </Switch>
-        </BrowserRouter>
+        </Router>
         
       </div>
     )

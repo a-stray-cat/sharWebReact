@@ -1,27 +1,27 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import { Layout, Menu, Breadcrumb } from 'antd';
-import { BrowserRouter, Link, withRouter, Route } from 'react-router-dom';
-import Icon from '@ant-design/icons';
+import { Link, withRouter, Route, Switch } from 'react-router-dom';
 import '../HomePage/homepage1.css';
 import menuList from '../config/menuConfig'
+import webList from '../config/webConfig'
 import App from './App/app';
 import Web from './Web/web';
 import Computer from './Computer/computer'
+import { getInfor } from '../api/homeInfor';
 
 
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 
-class SiderDemo extends React.Component {
+class Homepage extends React.Component {
 
   getMenuNodes = (menuList) => {
     return menuList.map(item => {
       if (!item.children) {
         return (
-          <Menu.Item key={item.key}>
+          <Menu.Item key={item.key} icon={item.icon}>
             <Link to={item.key}>
-              <Icon type={item.icon} />
               <span>{item.title}</span>
             </Link>
           </Menu.Item>
@@ -37,10 +37,10 @@ class SiderDemo extends React.Component {
             key={item.key}
             title={
               <span>
-                <Icon type={item.icon}></Icon>
                 <span>{item.title}</span>
               </span>
             }
+            icon={item.icon}
           >
             {this.getMenuNodes(item.children)}
           </SubMenu>
@@ -48,6 +48,77 @@ class SiderDemo extends React.Component {
       }
     })
   }
+
+  getapp = (webList) => {
+
+  }
+
+  getTitle = () => {
+    //得到当前请求路径
+    const path = this.props.location.pathname
+    let title
+    menuList.forEach(item => {
+      //如果当前item对象的key与path一样，item的title就是要显示的title
+      if (item.key === path) {
+        title = item.title
+      } else if (item.children) {
+        //在所有子Item中查找匹配的
+        const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
+        //如果有值才说明有匹配的
+        if (cItem) {
+          //取出它的title
+          title = cItem.title
+        }
+      }
+    })
+    return title
+  }
+
+  getTwoTitle = () => {
+    //得到当前请求路径
+    const path = this.props.location.pathname
+    let titleTwo
+    menuList.forEach(item => {
+      //如果当前item对象的key与path一样，item的title就是要显示的title
+      if (path.indexOf('/homepage/web/') > -1) {
+        titleTwo = '网页端'
+      } else if (path.indexOf('/homepage/computer/') > -1) {
+        titleTwo = '电脑端'
+      } else if (path.indexOf('/homepage/app/') > -1) {
+        titleTwo = '手机端'
+      }
+    })
+    return titleTwo
+  }
+
+  getInfor = (async () => {
+    const response = await getInfor()
+    // console.log(response.data)
+    let data = response.data
+    let web = [];
+    for (let i in data) {
+      if (data[i].id === 'web') {
+        web.push(data[i]);
+      }
+    }
+    localStorage.setItem('web', JSON.stringify(web))
+
+    let app = [];
+    for (let i in data) {
+      if (data[i].id === 'app') {
+        app.push(data[i]);
+      }
+    }
+    localStorage.setItem('app', JSON.stringify(app))
+
+    let computer = [];
+    for (let i in data) {
+      if (data[i].id === 'computer') {
+        computer.push(data[i]);
+      }
+    }
+    localStorage.setItem('computer', JSON.stringify(computer))
+  })
 
   state = {
     deskHeight: document.body.clientHeight,
@@ -78,12 +149,17 @@ class SiderDemo extends React.Component {
   //在第一次render()之前执行一次
   componentWillMount() {
     this.menuNodes = this.getMenuNodes(menuList)
+    this.getInformation = this.getInfor()
+    this.getappList = this.getapp()
   }
 
   render() {
     const { lastHeight } = this.state;
-    const path = this.props.location.pathname
-    console.log("render()", path)
+    //得到当前需要显示的title
+    const title = this.getTitle()
+    const titleTwo = this.getTwoTitle()
+    // const path = this.props.location.pathname
+    // console.log("render()", path)
     return (
       <Layout>
         <Header className="header">
@@ -91,11 +167,11 @@ class SiderDemo extends React.Component {
         </Header>
         <Content style={{ padding: '0 50px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
+            <Breadcrumb.Item>首页</Breadcrumb.Item>
+            <Breadcrumb.Item>{titleTwo}</Breadcrumb.Item>
+            <Breadcrumb.Item>{title}</Breadcrumb.Item>
           </Breadcrumb>
-          <Layout className="site-layout-background" style={{ padding: '24px 0', height: lastHeight }}>
+          <Layout className="site-layout-background" style={{ padding: '24px 0', height: '100%', minHeight: lastHeight }}>
             <Sider className="site-layout-background" width={200}>
               <Menu
                 mode="inline"
@@ -104,24 +180,28 @@ class SiderDemo extends React.Component {
                 style={{ height: '100%' }}
               >
                 {
-                  this.menuNodes
+                  this.menuNodes,
+                  this.getappList
                 }
               </Menu>
             </Sider>
             <Content style={{ padding: '0 24px', minHeight: 280 }}>
-              <BrowserRouter basename="homepage">
-                {/* <Link to='/app'>app</Link> */}
-                <Route path='/app' component={App}></Route>
-                <Route path='/web' component={Web}></Route>
-                <Route path='/computer' component={Computer}></Route>
-              </BrowserRouter>
+              <Switch>
+                <Route path='/homepage/app' component={App}></Route>
+                <Route path='/homepage/web' component={Web}></Route>
+                <Route path='/homepage/computer' component={Computer}></Route>
+              </Switch>
             </Content>
           </Layout>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>备案号</Footer>
+        <Footer style={{ textAlign: 'center' }}>
+          <div style={{width:'300px',margin:'0 auto', padding:'20px 0'}}>
+            <a target="_blank" rel="noreferrer" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=51132402000094" style={{display:'inline-block',textDecoration:'none',height:'20px',lineHeight:'20px'}}><img alt='备案图标' src="http://www.beian.gov.cn/img/ghs.png" style={{float:'left'}}/><p style={{float:'left',height:'20px',lineHeight:'20px',margin: '0px 0px 0px 5px', color:'#939393'}}>川公网安备 51132402000094号</p></a>
+          </div>
+        </Footer>
       </Layout>
     )
   }
 }
 
-export default withRouter(SiderDemo)
+export default withRouter(Homepage)

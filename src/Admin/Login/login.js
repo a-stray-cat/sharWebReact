@@ -39,7 +39,7 @@ export default class Login extends Component {
     render() {
         //判断登录
         const user = memoryUtils.user
-        const isEmpty = JSON.stringify(user)=='{}'
+        const isEmpty = JSON.stringify(user)==='{}'
         const isEmptyf = !isEmpty
         if (isEmptyf){
             return <Redirect to='/admin'></Redirect>
