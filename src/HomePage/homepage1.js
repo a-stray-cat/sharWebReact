@@ -4,10 +4,9 @@ import { Layout, Menu, Breadcrumb } from 'antd';
 import { Link, withRouter, Route, Switch } from 'react-router-dom';
 import '../HomePage/homepage1.css';
 import menuList from '../config/menuConfig'
-import webList from '../config/webConfig'
 import App from './App/app';
 import Web from './Web/web';
-import Computer from './Computer/computer'
+import Computer from './Computer/computer';
 import { getInfor } from '../api/homeInfor';
 
 
@@ -17,6 +16,7 @@ const { Header, Content, Footer, Sider } = Layout;
 class Homepage extends React.Component {
 
   getMenuNodes = (menuList) => {
+    console.log(2)
     return menuList.map(item => {
       if (!item.children) {
         return (
@@ -49,9 +49,14 @@ class Homepage extends React.Component {
     })
   }
 
-  getapp = (webList) => {
+  handleClick = e => {
+    const start = JSON.stringify(e.keyPath[1]).length
+    const end = JSON.stringify(e.keyPath[0]).length-1
+    localStorage.setItem('onclick',JSON.stringify(e.keyPath[0]).substring(start,end))
+    localStorage.setItem('nowSelect',e.keyPath[1])
+  };
 
-  }
+  
 
   getTitle = () => {
     //得到当前请求路径
@@ -93,7 +98,7 @@ class Homepage extends React.Component {
 
   getInfor = (async () => {
     const response = await getInfor()
-    // console.log(response.data)
+    console.log(1)
     let data = response.data
     let web = [];
     for (let i in data) {
@@ -126,6 +131,11 @@ class Homepage extends React.Component {
     lastHeight: document.body.clientHeight - (document.body.clientHeight) / 7
   };
 
+  constructor(props) {
+    super(props);
+    this.getInformation = this.getInfor()
+  }
+
   componentDidMount() {
 
     // 注册浏览器尺寸变化监听事件， 刷新桌面尺寸
@@ -148,9 +158,11 @@ class Homepage extends React.Component {
   }
   //在第一次render()之前执行一次
   componentWillMount() {
+    
     this.menuNodes = this.getMenuNodes(menuList)
-    this.getInformation = this.getInfor()
-    this.getappList = this.getapp()
+    
+    // this.getappList = this.getapp()
+    
   }
 
   render() {
@@ -158,8 +170,11 @@ class Homepage extends React.Component {
     //得到当前需要显示的title
     const title = this.getTitle()
     const titleTwo = this.getTwoTitle()
-    // const path = this.props.location.pathname
-    // console.log("render()", path)
+    const nowSelect = JSON.stringify(localStorage.getItem('nowSelect'))
+    // console.log(nowSelect)
+    
+    const path = this.props.location.pathname
+    // console.log(now)
     return (
       <Layout>
         <Header className="header">
@@ -175,13 +190,13 @@ class Homepage extends React.Component {
             <Sider className="site-layout-background" width={200}>
               <Menu
                 mode="inline"
-                // selectedKeys={[path]}
-                // openKeys={[openKey]}
                 style={{ height: '100%' }}
+                onClick={this.handleClick}
+                defaultSelectedKeys={[path]}
+                defaultOpenKeys={[JSON.parse(nowSelect)]}
               >
                 {
-                  this.menuNodes,
-                  this.getappList
+                  this.menuNodes
                 }
               </Menu>
             </Sider>
@@ -196,7 +211,7 @@ class Homepage extends React.Component {
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           <div style={{width:'300px',margin:'0 auto', padding:'20px 0'}}>
-            <a target="_blank" rel="noreferrer" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=51132402000094" style={{display:'inline-block',textDecoration:'none',height:'20px',lineHeight:'20px'}}><img alt='备案图标' src="http://www.beian.gov.cn/img/ghs.png" style={{float:'left'}}/><p style={{float:'left',height:'20px',lineHeight:'20px',margin: '0px 0px 0px 5px', color:'#939393'}}>川公网安备 51132402000094号</p></a>
+            <a target="_blank" rel="noreferrer" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=51132402000094" style={{display:'inline-block',textDecoration:'none',height:'20px',lineHeight:'20px'}}><img alt='备案图标' src='https://whanp.ltd/static/media/beian.0c577066.png' style={{float:'left'}}/><p style={{float:'left',height:'20px',lineHeight:'20px',margin: '0px 0px 0px 5px', color:'#939393'}}>川公网安备 51132402000094号</p></a>
           </div>
         </Footer>
       </Layout>

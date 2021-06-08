@@ -17,16 +17,16 @@ for(let i in web){
 var app=JSON.parse(localStorage.getItem('app'))
 let apptype = []
 for(let i in app){
-      if (app[i]) {
-        apptype.push({'title':app[i].type,'key':'/homepage/app/'+i});
+      if (JSON.stringify(apptype).indexOf(app[i].type) === -1) {
+        apptype.push({'title':app[i].type,'key':'/homepage/app/'+app[i].type});
       }
 }
 
 var computer=JSON.parse(localStorage.getItem('computer'))
 let computertype = []
 for(let i in computer){
-      if (computer[i]) {
-        computertype.push({'title':computer[i].type,'key':'/homepage/computer/'+i});
+      if (JSON.stringify(computertype).indexOf(computer[i].type) === -1) {
+        computertype.push({'title':computer[i].type,'key':'/homepage/computer/'+computer[i].type});
       }
 }
 

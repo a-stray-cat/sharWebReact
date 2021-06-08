@@ -6,7 +6,6 @@ for(let i in web){
         webtypeUrl.push({'type':web[i].type,'key':web[i].url,'name':web[i].name});
       }
 }
-console.log(webtypeUrl)
 
-const webList = webtypeUrl
-console.log(webList)
+const webList = Array.from(webtypeUrl)
+export default webList
